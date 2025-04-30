@@ -7,7 +7,6 @@ const dotenv = require('dotenv');
 const verifyToken = require('../jwt-auth/auth.js');
 dotenv.config();
 
-// Register
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -28,7 +27,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -51,9 +49,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Protected Route Example
-router.get('/dashboard', verifyToken, (req, res) => {
-  res.json({ message: `Welcome, ${req.user.email}!`, user: req.user });
-});
+
 
 module.exports = router;

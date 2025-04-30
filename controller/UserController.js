@@ -24,7 +24,6 @@ const addUser = async (req, res, next) => {
       return res.status(400).json({ error: "All fields (name, email, password, role) are required" });
     }
 
-    // Check for existing user with same name or email
     const existingUser = await User.findOne({ 
       $or: [{ email }, { name }] 
     });
@@ -56,11 +55,10 @@ const updateUser = async (req, res, next) => {
       return res.status(400).json({ error: "User ID is required" });
     }
 
-    // Check if email or name is already taken by another user
     const existingUser = await User.findOne({
       $and: [
-        { $or: [{ email }, { name }] }, // Check for duplicate email or name
-        { id: { $ne: id } } // Ensure it's not the same user being updated
+        { $or: [{ email }, { name }] }, 
+        { id: { $ne: id } }
       ]
     });
 
@@ -72,7 +70,6 @@ const updateUser = async (req, res, next) => {
       });
     }
 
-    // Proceed with the update
     const result = await User.updateOne(
       { id: id },
       { $set: { name, email, password, role } }
