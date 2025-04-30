@@ -1,54 +1,116 @@
-const User = require("./model");
+const User = require("../model/UserModel.js");
 
-const getUsers = (req, res, next) => {
-  User.find()
-    .then((response) => {
-      res.json({ response });
-    })
-    .catch((error) => {
-      res.json({ error: " error " });
+const getUsers = async (req, res, next) => {
+  try {
+    const users = await User.find();
+
+    res.status(200).json({
+      message: "Users retrieved successfully",
+      users: users,
     });
+  } catch (error) {
+    res.status(500).json({
+      error: "An error occurred while retrieving users",
+    });
+  }
 };
 
-const addUser = (req, res, next) => {
-  const user = new User({
-    id: req.body.id,
-    name: req.body.name,
-  });
-  user
-    .save()
-    .then((response) => {
-      res.json({ response });
-    })
-    .catch((error) => {
-      res.json({ error: " error " });
+
+const addUser = async (req, res, next) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ error: "All fields (name, email, password, role) are required" });
+    }
+
+    // Check for existing user with same name or email
+    const existingUser = await User.findOne({ 
+      $or: [{ email }, { name }] 
     });
+
+    if (existingUser) {
+      return res.status(409).json({ 
+        error: existingUser.email === email 
+          ? "Email already in use" 
+          : "Name already in use" 
+      });
+    }
+
+    const newUser = new User({ name, email, password, role });
+    await newUser.save();
+
+    res.status(201).json({ message: "User created successfully", user: newUser });
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while creating the user" });
+  }
 };
 
-const updateUser = (req, res, next) => {
-  const { id, name } = req.body;
-  User.updateOne({ id: id }, { $set: { name: name } })
-    .then((response) => {
-      res.json({ response });
-    })
-    .catch((error) => {
-      res.json({ error: " error " });
+
+ 
+const updateUser = async (req, res, next) => {
+  try {
+    const { id, name, email, password, role } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    // Check if email or name is already taken by another user
+    const existingUser = await User.findOne({
+      $and: [
+        { $or: [{ email }, { name }] }, // Check for duplicate email or name
+        { id: { $ne: id } } // Ensure it's not the same user being updated
+      ]
     });
+
+    if (existingUser) {
+      return res.status(409).json({
+        error: existingUser.email === email
+          ? "Email already in use"
+          : "Name already in use"
+      });
+    }
+
+    // Proceed with the update
+    const result = await User.updateOne(
+      { id: id },
+      { $set: { name, email, password, role } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ message: "User updated successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while updating the user" });
+  }
 };
 
-const deleteUser = (req, res, next) => {
-  const id = req.body.id;
-  User.deleteOne({ id: id })
-    .then((response) => {
-      res.json({ response });
-    })
-    .catch((error) => {
-      res.json({ error: " error " });
-    });
-};
+const deleteUser = async (req, res, next) => {
+  try {
+    const { id } = req.body;
 
+    if (!id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const result = await User.deleteOne({ id: id });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the user" });
+  }
+};
 
 exports.getUsers = getUsers;
-exports.deleteUser  = deleteUser ; 
-exports.updateUser  = updateUser  ;
-exports.addUser  = addUser ;  
+exports.deleteUser = deleteUser;
+exports.updateUser = updateUser;
+exports.addUser = addUser;

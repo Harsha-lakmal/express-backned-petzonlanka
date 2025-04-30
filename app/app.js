@@ -1,15 +1,14 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const controller = require("./controller.js");
-
+const controller  =  require('../controller/UserController.js');
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
 
-app.get("/users", (req, res) => {
+app.get("/users", (req, res) => {  
   var resObj = [];
   controller.getUsers((req, res, next) => {
     res.send();
