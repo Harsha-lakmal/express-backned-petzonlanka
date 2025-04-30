@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-const authRoutes = require("./routers/authRoutes.js");
+const authRoutes = require("./routers/AuthRoutes.js");
 const userRoutes = require("./routers/UserRouters.js");
 
 dotenv.config();
@@ -36,6 +36,6 @@ app.use("/api/user", userRoutes);
 
 connectDB().then(() => {
   app.listen(port, host, () => {
-    console.log(`🚀 Server running at http://${host}:${port}`);
+    console.log(` Server running at http://${host}:${port}`);
   });
 });
