@@ -1,5 +1,5 @@
 const { json } = require("express");
-const PetType = require("../model/PetNameType.js");
+const PetType = require("../model/PetNameTypeModel.js");
 
 const addPetType = async (req, res, next) => {
   try {
@@ -39,7 +39,6 @@ const updatePetType = async (req, res, next) => {
   try {
     const { petTypeId, name } = req.body;
 
-    // Validate inputs
     if (!petTypeId) {
       return res.status(400).json({
         error: "Pet Type ID is required",
@@ -52,7 +51,6 @@ const updatePetType = async (req, res, next) => {
       });
     }
 
-    // Check if another PetType with the same name already exists
     const existingPetType = await PetType.findOne({
       name: name,
       petTypeId: { $ne: petTypeId },
@@ -64,7 +62,6 @@ const updatePetType = async (req, res, next) => {
       });
     }
 
-    // Update the PetType
     const result = await PetType.updateOne(
       { petTypeId: petTypeId },
       { $set: { name: name } }
@@ -92,7 +89,6 @@ const deletePetType = async (req, res, next) => {
   try {
     const { petTypeId } = req.body;
 
-    // Validate input
     if (!petTypeId) {
       return res.status(400).json({
         error: "Pet Type ID is required",

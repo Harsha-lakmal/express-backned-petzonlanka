@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const controller  =  require('../controller/UserController.js');
 const  PetTpyeCpntroller  = require('../controller/PetTypeController.js');
+const PetDeteilsController  = require('../controller/PetDeteilsController.js');
 app.use(
   express.urlencoded({
     extended: true,
@@ -47,6 +48,13 @@ app.post('/createPetType', (req,res) =>{
 app.put('/updatePetTpye' , (req, res) =>{
   const petTypeId =  req.query.petTypeId ; 
   PetTpyeCpntroller.updatePetType(req.body , (callback) =>{
+    res.send(callback);
+  });
+});
+
+app.post('/createPet' , (req , res ) =>{
+  const petId  = req.query.petId ; 
+  PetDeteilsController.addPet(req.body , (callback) =>{
     res.send(callback);
   });
 });
