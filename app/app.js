@@ -44,4 +44,11 @@ app.post('/createPetType', (req,res) =>{
 
 });
 
+app.put('/updatePetTpye' , (req, res) =>{
+  const petTypeId =  req.query.petTypeId ; 
+  PetTpyeCpntroller.updatePetType(req.body , (callback) =>{
+    res.send(callback);
+  });
+});
+
 module.exports = app;
