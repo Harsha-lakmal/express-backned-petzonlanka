@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const controller  =  require('../controller/UserController.js');
+const  PetTpyeCpntroller  = require('../controller/PetTypeController.js');
 app.use(
   express.urlencoded({
     extended: true,
@@ -33,6 +34,14 @@ app.delete("/deleteteuser", (req, res) => {
   controller.deleteUser(req.body, (callback) => {
     res.send(callback);
   });
+});
+
+app.post('/createPetType', (req,res) =>{
+  const  id  = req.query.id ; 
+  PetTpyeCpntroller.addPetType(req.body , (callback) =>{
+    res.send(callback);
+  });
+
 });
 
 module.exports = app;

@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 
 const authRoutes = require("./routers/AuthRoutes.js");
 const userRoutes = require("./routers/UserRouters.js");
+const petTypeRouters   =  require('./routers/PetTypeRouters.js');
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ const connectDB = async () => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/pet" , petTypeRouters);
 
 connectDB().then(() => {
   app.listen(port, host, () => {
