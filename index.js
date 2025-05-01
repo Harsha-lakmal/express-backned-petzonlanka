@@ -10,7 +10,7 @@ const PetDetailsRouters  =  require('./routers/PetDetislRouters.js');
 
 dotenv.config();
 
-const app = express();
+const index  =  express();
 const port = process.env.PORT;
 const host = process.env.HOST;
 
@@ -19,8 +19,8 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
-app.use(cors(corsOptions));
-app.use(express.json());
+index.use(cors(corsOptions));
+index.use(express.json());
 
 const connectDB = async () => {
   try {
@@ -33,13 +33,13 @@ const connectDB = async () => {
   }
 };
 
-app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api/pet" , petTypeRouters);
-app.use('/api/pets' , PetDetailsRouters);
+index.use("/api/auth", authRoutes);
+index.use("/api/user", userRoutes);
+index.use("/api/pet" , petTypeRouters);
+index.use('/api/pets' , PetDetailsRouters);
 
 connectDB().then(() => {
-  app.listen(port, host, () => {
+  index.listen(port, host, () => {
     console.log(` Server running at http://${host}:${port}`);
   });
 });

@@ -8,6 +8,4 @@ PetTyperouter.put('/updatePetTpye' , verifyToken , controller.updatePetType);
 PetTyperouter.delete('/deletePetType' , verifyToken , controller.deletePetType);
 PetTyperouter.get('/getAllPetType' , verifyToken , controller.getPetType);
 
-
-
 module.exports = PetTyperouter ;  
