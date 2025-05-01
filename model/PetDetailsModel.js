@@ -9,7 +9,11 @@ const petDetailsSchema = new Schema({
   description: { type: String },
   type: { type: String, required: true },
   price: { type: String, required: true },
-  stock: { type: String, required: true }
+  stock: { type: String, required: true },
+  img: {
+    data: Buffer,
+    contentType: String
+  }
 });
 
 petDetailsSchema.plugin(AutoIncrement, { inc_field: 'petId' });

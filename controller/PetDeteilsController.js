@@ -1,4 +1,5 @@
 const PetDetails = require("../model/PetDetailsModel.js");
+const multer = require("multer");
 
 const addPet = async (req, res, next) => {
   try {
@@ -91,11 +92,11 @@ const deletePet = async (req, res, next) => {
 
 const getPets = async (req, res, next) => {
   try {
-    const pets = await PetDetails.find(); 
+    const pets = await PetDetails.find();
 
     res.status(200).json({
       message: "Pets retrieved successfully",
-      pets: pets, 
+      pets: pets,
     });
   } catch (error) {
     res.status(500).json({
@@ -104,8 +105,32 @@ const getPets = async (req, res, next) => {
   }
 };
 
+const uploadImage = async (req, res) => {
+  try {
+    const petId = req.body;
+    console.log(petId);
+    
+    const pet = await PetDetails.findOne({ petId: petId });
+
+    if (!pet) {
+      return res.status(404).json({ error: "Pet not found" });
+    }
+
+    pet.img = {
+      data: req.file.buffer,
+      contentType: req.file.mimetype,
+    };
+
+    await pet.save();
+    res.status(200).json({ message: "Image uploaded successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to upload image" });
+  }
+};
 
 exports.addPet = addPet;
 exports.updatePet = updatePet;
 exports.deletePet = deletePet;
-exports.getPets =  getPets ; 
+exports.getPets = getPets;
+exports.uploadImage = uploadImage;
