@@ -38,7 +38,8 @@ index.use("/api/auth", authRoutes);
 index.use("/api/user", userRoutes);
 index.use("/api/pet" , petTypeRouters);
 index.use('/api/pets' , PetDetailsRouters); 
-index.use('/api/vglo' , VlogRouters);
+index.use('/api/vlog' , VlogRouters);
+
 
 connectDB().then(() => {
   index.listen(port, host, () => {

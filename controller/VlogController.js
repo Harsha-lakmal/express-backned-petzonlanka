@@ -1,12 +1,13 @@
 const Vlog = require("../model/vlogModel.js");
 
-const addVlog = async (req, res, next) => {
+
+const addVlog = async (req, res) => {
   try {
     const { desc, VlogerName } = req.body;
 
     if (!desc || !VlogerName) {
       return res.status(400).json({
-        error: "All feild Not & Try Agian ",
+        error: "All fields are required. Please try again.",
       });
     }
 
@@ -15,17 +16,19 @@ const addVlog = async (req, res, next) => {
       VlogerName,
     });
 
-    await newVlog, save();
+    await newVlog.save();
 
     res.status(200).json({
-      message: "Vlog is saved",
+      message: "Vlog is saved successfully.",
     });
   } catch (error) {
     res.status(500).json({
-      error: "error not saved",
+      error: "Failed to save vlog.",
     });
   }
 };
+
+
 
 const updateVlog = async (req, res, next) => {
   try {
