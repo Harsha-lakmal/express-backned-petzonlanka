@@ -6,7 +6,7 @@ const addPet = async (req, res, next) => {
     const { name, description, type, price, stock } = req.body;
 
     if (!name || !description || !type || !price || !stock) {
-      return res.this.status(400).json({
+      return res.status(400).json({
         error: "All feild  & Try Again ",
       });
     }
@@ -107,25 +107,34 @@ const getPets = async (req, res, next) => {
 
 const uploadImage = async (req, res) => {
   try {
-    const petId = req.body;
-    console.log(petId);
-    
-    const pet = await PetDetails.findOne({ petId: petId });
+    const petId = req.params.petId;
+    console.log("pet id : " + petId);
 
+   
+    if (!petId) {
+      return res.status(400).json({ error: "Pet ID is required" });
+    }
+    
+    const pet = await PetDetails.findOne({ petId: Number(petId) });
+    
     if (!pet) {
       return res.status(404).json({ error: "Pet not found" });
     }
-
+    
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file uploaded" });
+    }
+    
     pet.img = {
       data: req.file.buffer,
       contentType: req.file.mimetype,
     };
-
+    
     await pet.save();
     res.status(200).json({ message: "Image uploaded successfully" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to upload image" });
+    console.error("Error uploading image:", error);
+    res.status(500).json({ error: "Server error" });
   }
 };
 

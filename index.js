@@ -7,6 +7,7 @@ const authRoutes = require("./routers/AuthRoutes.js");
 const userRoutes = require("./routers/UserRouters.js");
 const petTypeRouters   =  require('./routers/PetTypeRouters.js');
 const PetDetailsRouters  =  require('./routers/PetDetislRouters.js');
+const VlogRouters  =  require('./routers/vlogRouters.js');
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ index.use("/api/auth", authRoutes);
 index.use("/api/user", userRoutes);
 index.use("/api/pet" , petTypeRouters);
 index.use('/api/pets' , PetDetailsRouters);
+index.use('/api/vlog' , VlogRouters);
 
 connectDB().then(() => {
   index.listen(port, host, () => {
