@@ -108,32 +108,55 @@ const getPets = async (req, res, next) => {
 const uploadImage = async (req, res) => {
   try {
     const petId = req.params.petId;
-    console.log("pet id : " + petId);
+    console.log("pet id:", petId);
 
-   
     if (!petId) {
       return res.status(400).json({ error: "Pet ID is required" });
     }
-    
+
     const pet = await PetDetails.findOne({ petId: Number(petId) });
-    
+
     if (!pet) {
       return res.status(404).json({ error: "Pet not found" });
     }
-    
+
     if (!req.file) {
       return res.status(400).json({ error: "No image file uploaded" });
     }
-    
+
     pet.img = {
       data: req.file.buffer,
       contentType: req.file.mimetype,
     };
-    
+
     await pet.save();
+
     res.status(200).json({ message: "Image uploaded successfully" });
   } catch (error) {
     console.error("Error uploading image:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const getImage = async (req, res) => {
+  try {
+    const petId = req.params.petId;
+    console.log("Fetching image for pet id:", petId);
+
+    if (!petId) {
+      return res.status(400).json({ error: "Pet ID is required" });
+    }
+
+    const pet = await PetDetails.findOne({ petId: Number(petId) });
+
+    if (!pet || !pet.img || !pet.img.data) {
+      return res.status(404).json({ error: "Image not found for this pet" });
+    }
+
+    res.set("Content-Type", pet.img.contentType);
+    res.send(pet.img.data);
+  } catch (error) {
+    console.error("Error retrieving image:", error);
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -143,3 +166,4 @@ exports.updatePet = updatePet;
 exports.deletePet = deletePet;
 exports.getPets = getPets;
 exports.uploadImage = uploadImage;
+exports.getImage  =  getImage ; 

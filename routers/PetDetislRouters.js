@@ -12,7 +12,9 @@ PetDetailsRouters.post("/createPet", verifyToken, controller.addPet);
 PetDetailsRouters.put("/updatePet", verifyToken, controller.updatePet);
 PetDetailsRouters.delete("/deletePet", verifyToken, controller.deletePet);
 PetDetailsRouters.get("/getPets", verifyToken, controller.getPets);
-PetDetailsRouters.post('/image/id/', verifyToken, upload.single('image'), controller.uploadImage);
+PetDetailsRouters.post('/image/:petId', verifyToken, upload.single('image'), controller.uploadImage);
+PetDetailsRouters.get('/image/:petId',verifyToken , controller.getImage);
+
 
 module.exports = PetDetailsRouters;
 
