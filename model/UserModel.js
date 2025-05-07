@@ -19,7 +19,6 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-userSchema.plugin(AutoIncrement, { inc_field: "id" });
-
+    
 const User = mongoose.model("User", userSchema);
 module.exports = User;
