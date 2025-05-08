@@ -1,4 +1,5 @@
 const User = require("../model/UserModel.js");
+const mongoose = require("mongoose");
 
 const getUsers = async (req, res, next) => {
   try {
@@ -15,38 +16,44 @@ const getUsers = async (req, res, next) => {
   }
 };
 
-
 const addUser = async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
 
     if (!name || !email || !password || !role) {
-      return res.status(400).json({ error: "All fields (name, email, password, role) are required" });
+      return res
+        .status(400)
+        .json({
+          error: "All fields (name, email, password, role) are required",
+        });
     }
 
-    const existingUser = await User.findOne({ 
-      $or: [{ email }, { name }] 
+    const existingUser = await User.findOne({
+      $or: [{ email }, { name }],
     });
 
     if (existingUser) {
-      return res.status(409).json({ 
-        error: existingUser.email === email 
-          ? "Email already in use" 
-          : "Name already in use" 
+      return res.status(409).json({
+        error:
+          existingUser.email === email
+            ? "Email already in use"
+            : "Name already in use",
       });
     }
 
     const newUser = new User({ name, email, password, role });
     await newUser.save();
 
-    res.status(201).json({ message: "User created successfully", user: newUser });
+    res
+      .status(201)
+      .json({ message: "User created successfully", user: newUser });
   } catch (error) {
-    res.status(500).json({ error: "An error occurred while creating the user" });
+    res
+      .status(500)
+      .json({ error: "An error occurred while creating the user" });
   }
 };
 
-
- 
 const updateUser = async (req, res, next) => {
   try {
     const { id, name, email, password, role } = req.body;
@@ -55,23 +62,25 @@ const updateUser = async (req, res, next) => {
       return res.status(400).json({ error: "User ID is required" });
     }
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid user ID format" });
+    }
+
     const existingUser = await User.findOne({
-      $and: [
-        { $or: [{ email }, { name }] }, 
-        { id: { $ne: id } }
-      ]
+      $and: [{ $or: [{ email }, { name }] }, { _id: { $ne: id } }],
     });
 
     if (existingUser) {
       return res.status(409).json({
-        error: existingUser.email === email
-          ? "Email already in use"
-          : "Name already in use"
+        error:
+          existingUser.email === email
+            ? "Email already in use"
+            : "Name already in use",
       });
     }
 
     const result = await User.updateOne(
-      { id: id },
+      { _id: id },
       { $set: { name, email, password, role } }
     );
 
@@ -81,7 +90,11 @@ const updateUser = async (req, res, next) => {
 
     res.status(200).json({ message: "User updated successfully" });
   } catch (error) {
-    res.status(500).json({ error: "An error occurred while updating the user" });
+    res
+      .status(500)
+      .json({
+        error: "An error occurred while updating the user: " + error.message,
+      });
   }
 };
 
@@ -93,7 +106,7 @@ const deleteUser = async (req, res, next) => {
       return res.status(400).json({ error: "User ID is required" });
     }
 
-    const result = await User.deleteOne({ id: id });
+    const result = await User.deleteOne({ _id: id });
 
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: "User not found" });
@@ -103,7 +116,9 @@ const deleteUser = async (req, res, next) => {
   } catch (err) {
     res
       .status(500)
-      .json({ error: "An error occurred while deleting the user" });
+      .json({
+        error: "An error occurred while deleting the user: " + err.message,
+      });
   }
 };
 

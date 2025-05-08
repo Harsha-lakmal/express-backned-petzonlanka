@@ -4,7 +4,6 @@ const User = require("../model/UserModel.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const verifyToken = require("../jwt-auth/Auth.js");
 dotenv.config();
 
 router.post("/register", async (req, res) => {
@@ -17,12 +16,12 @@ router.post("/register", async (req, res) => {
     }
 
 
-    const newUser = new User({ name, email, password, role });
+    const newUser = new User({ name, email, password, role });  
     await newUser.save();
 
     res.status(201).json({ message: "User created successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error"+ err });
   }
 });
 
