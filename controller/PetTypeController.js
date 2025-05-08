@@ -3,7 +3,7 @@ const PetType = require("../model/PetNameTypeModel.js");
 
 const addPetType = async (req, res, next) => {
   try {
-    const { name } = req.body;
+    const { name} = req.body;
 
     if (!name) {
       return res.status(400).json({
@@ -21,7 +21,7 @@ const addPetType = async (req, res, next) => {
       });
     }
 
-    const newPetType = new PetType({ name });
+    const newPetType = new PetType({ name });         
     await newPetType.save();
 
     res.status(201).json({
