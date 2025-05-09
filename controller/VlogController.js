@@ -104,7 +104,68 @@ const getVlogs = async (req, res, next) => {
   }
 };
 
+
+const uploadImage = async (req, res) => {
+  try {
+    const vlogId = req.params.vlogId;
+    console.log("pet id:", vlogId);
+
+    if (!vlogId) {
+      return res.status(400).json({ error: "Pet ID is required" });
+    }
+
+    const vlog = await PetDetails.findOne({ vlogId: Number(vlogId) });
+
+    if (!vlog) {
+      return res.status(404).json({ error: "Pet not found" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file uploaded" });
+    }
+
+    vlog.img = {
+      data: req.file.buffer,
+      contentType: req.file.mimetype,
+    };
+
+    await vlog.save();
+
+    res.status(200).json({ message: "Image uploaded successfully" });
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const getImage = async (req, res) => {
+  try {
+    const vlogId = req.params.vlogId;
+    console.log("Fetching image for pet id:", vlogId);
+
+    if (!vlogId) {
+      return res.status(400).json({ error: "Pet ID is required" });
+    }
+
+    const vlog = await PetDetails.findOne({ vlogId: Number(vlogId) });
+
+    if (!vlog || !vlog.img || !vlog.img.data) {
+      return res.status(404).json({ error: "Image not found for this pet" });
+    }
+
+    res.set("Content-Type", pet.img.contentType);
+    res.send(pet.img.data);
+  } catch (error) {
+    console.error("Error retrieving image:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
 exports.addVlog = addVlog;
 exports.updateVlog = updateVlog;
 exports.deleteVlog = deleteVlog;
 exports.getVlogs = getVlogs;
+exports.getImage  =  getImage  ; 
+exports.uploadImage  =  uploadImage  ; 
