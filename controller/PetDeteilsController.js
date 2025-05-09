@@ -7,7 +7,7 @@ const addPet = async (req, res, next) => {
 
     if (!name || !description || !type || !price || !stock) {
       return res.status(400).json({
-        error: "All feild  & Try Again ",
+        error: "All fields are required. Please try again.",
       });
     }
 
@@ -19,17 +19,19 @@ const addPet = async (req, res, next) => {
       stock,
     });
 
-    await newPetDetails.save();
+    const savedPet = await newPetDetails.save();
 
     res.status(200).json({
-      message: "Saved ",
+      message: "Pet saved successfully.",
+      petId: savedPet.petId, // Return the generated petId
     });
   } catch (error) {
     res.status(500).json({
-      error: "error not saved ",
+      error: "An error occurred. Pet not saved.",
     });
   }
 };
+
 
 const updatePet = async (req, res, next) => {
   try {
