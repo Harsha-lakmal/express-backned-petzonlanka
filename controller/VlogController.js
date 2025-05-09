@@ -108,16 +108,16 @@ const getVlogs = async (req, res, next) => {
 const uploadImage = async (req, res) => {
   try {
     const vlogId = req.params.vlogId;
-    console.log("pet id:", vlogId);
+    console.log("vlog  id:", vlogId);
 
     if (!vlogId) {
-      return res.status(400).json({ error: "Pet ID is required" });
+      return res.status(400).json({ error: " vlog  ID is required" });
     }
 
     const vlog = await PetDetails.findOne({ vlogId: Number(vlogId) });
 
     if (!vlog) {
-      return res.status(404).json({ error: "Pet not found" });
+      return res.status(404).json({ error: " vlog  not found" });
     }
 
     if (!req.file) {
@@ -144,7 +144,7 @@ const getImage = async (req, res) => {
     console.log("Fetching image for pet id:", vlogId);
 
     if (!vlogId) {
-      return res.status(400).json({ error: "Pet ID is required" });
+      return res.status(400).json({ error: " vlog  ID is required" });
     }
 
     const vlog = await PetDetails.findOne({ vlogId: Number(vlogId) });

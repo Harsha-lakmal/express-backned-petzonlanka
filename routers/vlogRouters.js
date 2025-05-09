@@ -4,6 +4,11 @@ const router = express.Router();
 const controller = require("../controller/VlogController.js");
 const verifyToken = require("../jwt-auth/Auth.js");
 
+const multer = require('multer');
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }); 
+
 router.get("/getVlogs", verifyToken, controller.getVlogs);
 router.post("/addVlog", verifyToken, controller.addVlog);
 router.put("/updateVlog", verifyToken, controller.updateVlog);
