@@ -1,6 +1,5 @@
 const Vlog = require("../model/vlogModel.js");
 
-
 const addVlog = async (req, res) => {
   try {
     const { desc, VlogerName } = req.body;
@@ -16,10 +15,11 @@ const addVlog = async (req, res) => {
       VlogerName,
     });
 
-    await newVlog.save();
+    const savedVlog = await newVlog.save();
 
     res.status(200).json({
       message: "Vlog is saved successfully.",
+      vlogId: savedVlog.vlogId, // returning the newly created vlog's ID
     });
   } catch (error) {
     res.status(500).json({
