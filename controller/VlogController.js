@@ -105,19 +105,20 @@ const getVlogs = async (req, res, next) => {
 };
 
 
+  
 const uploadImage = async (req, res) => {
   try {
     const vlogId = req.params.vlogId;
-    console.log("vlog  id:", vlogId);
+    console.log("vlog id:", vlogId);
 
     if (!vlogId) {
-      return res.status(400).json({ error: " vlog  ID is required" });
+      return res.status(400).json({ error: "Vlog ID is required" });
     }
 
-    const vlog = await PetDetails.findOne({ vlogId: Number(vlogId) });
+    const vlog = await Vlog.findOne({ vlogId: Number(vlogId) });
 
     if (!vlog) {
-      return res.status(404).json({ error: " vlog  not found" });
+      return res.status(404).json({ error: "Vlog not found" });
     }
 
     if (!req.file) {
@@ -138,28 +139,31 @@ const uploadImage = async (req, res) => {
   }
 };
 
+
+  
 const getImage = async (req, res) => {
   try {
     const vlogId = req.params.vlogId;
-    console.log("Fetching image for pet id:", vlogId);
+    console.log("Fetching image for vlog id:", vlogId);
 
     if (!vlogId) {
-      return res.status(400).json({ error: " vlog  ID is required" });
+      return res.status(400).json({ error: "Vlog ID is required" });
     }
 
-    const vlog = await PetDetails.findOne({ vlogId: Number(vlogId) });
+    const vlog = await Vlog.findOne({ vlogId: Number(vlogId) });
 
     if (!vlog || !vlog.img || !vlog.img.data) {
-      return res.status(404).json({ error: "Image not found for this pet" });
+      return res.status(404).json({ error: "Image not found for this vlog" });
     }
 
-    res.set("Content-Type", pet.img.contentType);
-    res.send(pet.img.data);
+    res.set("Content-Type", vlog.img.contentType);
+    res.send(vlog.img.data);
   } catch (error) {
     console.error("Error retrieving image:", error);
     res.status(500).json({ error: "Server error" });
   }
 };
+
 
 
 

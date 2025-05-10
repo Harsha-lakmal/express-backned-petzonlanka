@@ -13,7 +13,7 @@ router.get("/getVlogs", verifyToken, controller.getVlogs);
 router.post("/addVlog", verifyToken, controller.addVlog);
 router.put("/updateVlog", verifyToken, controller.updateVlog);
 router.delete("/deleteVlog", verifyToken, controller.deleteVlog);
-router.post('/image/:petId', verifyToken, upload.single('image'), controller.uploadImage);
-router.get('/image/:petId',verifyToken , controller.getImage);
+router.post("/image/:vlogId", verifyToken, upload.single("image"), controller.uploadImage);
+router.get("/image/:vlogId", verifyToken, controller.getImage);
 
 module.exports = router;
