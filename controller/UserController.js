@@ -122,7 +122,149 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+
+
+
+const uploadImageForProfile = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log("user id:", id);
+
+    if (!id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid User ID format" });
+    }
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file uploaded" });
+    }
+
+    user.imgProfile = {
+      data: req.file.buffer,
+      contentType: req.file.mimetype,
+    };
+
+    await user.save();
+
+    res.status(200).json({ message: "Image uploaded successfully" });
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
+  
+const getProfileImage = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log("User ID:", id);
+
+    if (!id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid User ID format" });
+    }
+
+    const user = await User.findById(id);
+
+    if (!user || !user.imgProfile || !user.imgProfile.data) {
+      return res.status(404).json({ error: "Profile image not found" });
+    }
+
+    res.set('Content-Type', user.imgProfile.contentType);
+    return res.send(user.imgProfile.data);
+  } catch (error) {
+    console.error("Error fetching profile image:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const uploadImageForCover = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log("User ID:", id);
+
+    if (!id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid User ID format" });
+    }
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file uploaded" });
+    }
+
+    user.imgCover = {
+      data: req.file.buffer,
+      contentType: req.file.mimetype,
+    };
+
+    await user.save();
+
+    res.status(200).json({ message: "Cover image uploaded successfully" });
+  } catch (error) {
+    console.error("Error uploading cover image:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+const getCoverImage = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid User ID format" });
+    }
+
+    const user = await User.findById(id);
+
+    if (!user || !user.imgCover || !user.imgCover.data) {
+      return res.status(404).json({ error: "Cover image not found" });
+    }
+
+    res.set('Content-Type', user.imgCover.contentType);
+    return res.send(user.imgCover.data);
+  } catch (error) {
+    console.error("Error fetching cover image:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
+
+
 exports.getUsers = getUsers;
 exports.deleteUser = deleteUser;
 exports.updateUser = updateUser;
 exports.addUser = addUser;
+exports.uploadImageForProfile  =  uploadImageForProfile  ; 
+exports.getProfileImage  =  getProfileImage ; 
+exports.uploadImageForCover  =  uploadImageForCover ; 
+exports.getCoverImage =  getCoverImage ; 

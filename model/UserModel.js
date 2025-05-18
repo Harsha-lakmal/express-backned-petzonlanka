@@ -15,6 +15,14 @@ const userSchema = new Schema(
       enum: ["user", "admin", "manager"],
       default: "user",
     },
+     imgCover: {
+        data: Buffer,
+        contentType: String,
+      },
+       imgProfile: {
+          data: Buffer,
+          contentType: String,
+        },
   },
   { timestamps: true }
 );
